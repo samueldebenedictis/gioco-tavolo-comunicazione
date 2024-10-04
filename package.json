@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "npx tsc",
-    "_exec": "node dist/index.js",
+    "_exec": "node dist/src/index.js",
     "exec": "npm run compile && npm run _exec",
     "check": "npx @biomejs/biome check --write src/",
     "test": "jest"

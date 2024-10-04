@@ -7,6 +7,14 @@ class Casella {
 	}
 }
 
+class CasellaSpeciale extends Casella {
+	isSpeciale: boolean;
+	constructor(numeroCasella: number, testoCasella: string) {
+		super(numeroCasella, `CASELLA SPECIALE! ${testoCasella}`);
+		this.isSpeciale = true;
+	}
+}
+
 export class Gioco {
 	giocatori: number;
 	tabellone: Casella[]; // le caselle sarano casuali
@@ -17,10 +25,16 @@ export class Gioco {
 
 		// creazione numero caselle da 1 fino al numero richiesto
 		for (let index = 1; index <= numeroCaselle; index++) {
-			const casellaTemp: Casella = new Casella(
-				index,
-				`Questa è la casella numero ${index}`,
-			);
+			let casellaTemp: Casella | CasellaSpeciale;
+
+			if (Math.random() > 0.9) {
+				casellaTemp = new CasellaSpeciale(
+					index,
+					`Questa è la casella speciale numero ${index}`,
+				);
+			} else {
+				casellaTemp = new Casella(index, `Questa è la casella numero ${index}`);
+			}
 			temp.push(casellaTemp);
 		}
 
