@@ -1,5 +1,5 @@
-import { describe, expect, test } from '@jest/globals';
-import { Gioco } from '../src/gioco';
+import { describe, expect, test } from 'vitest'
+import { Gioco } from "../../src/model/gioco";
 
 describe('Gioco', () => {
     test('La creazione di un gioco avviene con 2 giocatori e 40 caselle', () => {
