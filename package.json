@@ -7,7 +7,7 @@
     "compile": "npx tsc",
     "_exec": "node dist/src/index.js",
     "exec": "npm run compile && npm run _exec",
-    "check": "npx @biomejs/biome check --write src/",
+    "check": "npx @biomejs/biome check --write --unsafe src/",
     "test": "jest"
   },
   "author": "",
