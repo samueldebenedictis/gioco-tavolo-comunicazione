@@ -9,9 +9,11 @@ import {
 } from "./vars";
 
 class Giocatore {
-	readonly giocatore: string;
-	constructor(nomeGiocatore: string) {
-		this.giocatore = nomeGiocatore;
+	readonly nome: string;
+	readonly id: number;
+	constructor(nomeGiocatore: string, idGiocatore: number) {
+		this.nome = nomeGiocatore;
+		this.id = idGiocatore;
 	}
 }
 
@@ -22,13 +24,20 @@ export class Gioco {
 	tabellone: Casella[]; // le caselle saranno casuali
 	numeroGiocatori: number;
 
+	posizioneGiocatori: {
+		giocatore: Giocatore;
+		posizione: number;
+	}[];
+
 	constructor(
 		nomiGiocatori: string[],
 		numeroCaselle: number = NUMERO_CASELLE_PREDEFINITO,
 	) {
 		// Inizializza l'array dei giocatori con i nomi forniti
 
-		this.giocatori = nomiGiocatori.map((nome) => new Giocatore(nome));
+		this.giocatori = nomiGiocatori.map(
+			(nome, index) => new Giocatore(nome, index),
+		);
 		this.numeroGiocatori = this.giocatori.length;
 
 		if (this.numeroGiocatori > NUMERO_GIOCATORI_MASSIMO) {
@@ -56,6 +65,10 @@ export class Gioco {
 		}
 
 		this.tabellone = temp;
+
+		this.posizioneGiocatori = this.giocatori.map((g) => {
+			return { giocatore: g, posizione: 1 };
+		});
 	}
 
 	printInformazioniGioco() {
@@ -66,7 +79,7 @@ export class Gioco {
 		console.log(separatore);
 
 		this.giocatori.forEach((giocatore, index) => {
-			console.log(`Nome Giocatore ${index + 1}: ${giocatore.giocatore}`);
+			console.log(`Nome Giocatore ${index + 1}: ${giocatore.nome}`);
 		});
 
 		console.log(separatore);
@@ -79,6 +92,34 @@ export class Gioco {
 			console.log(
 				`Casella numero ${casella.numero} ha il testo "${casella.testo}"`,
 			);
+			const giocatoriSuCasella = this.posizioneGiocatori.filter(
+				(elemento) => elemento.posizione === casella.numero,
+			);
+			if (giocatoriSuCasella.length !== 0) {
+				for (const g of giocatoriSuCasella) {
+					console.log(`    Qui è presente il giocatore ${g.giocatore.nome}`);
+				}
+			}
+		}
+
+		console.table(this.posizioneGiocatori);
+	}
+
+	muoviGiocatore(idGiocatore: number, caselleDiAvanzamento: number) {
+		this.posizioneGiocatori.find(
+			(elemento) => elemento.giocatore.id === idGiocatore,
+		).posizione += caselleDiAvanzamento;
+	}
+
+	// TODO: da migliorare e rivedere
+
+	giocaUnTurno() {
+		for (let i = 0; i < this.numeroGiocatori; i++) {
+			const lancioDiDado = Math.floor(Math.random() * 6);
+			this.muoviGiocatore(i, lancioDiDado);
+			console.log(`Il giocatore con id ${i} si muove di ${lancioDiDado}`);
 		}
 	}
+
+	// da migliorare
 }
