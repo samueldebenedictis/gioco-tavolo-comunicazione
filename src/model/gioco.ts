@@ -1,4 +1,12 @@
 import { Casella, CasellaSpeciale } from "./casella";
+import { Errori } from "./errori";
+import {
+	NUMERO_CASELLE_PREDEFINITO,
+	NUMERO_GIOCATORI_MASSIMO,
+	NUMERO_GIOCATORI_MINIMO,
+	NuovaLinea,
+	separatore,
+} from "./vars";
 
 class Giocatore {
 	readonly giocatore: string;
@@ -8,14 +16,28 @@ class Giocatore {
 }
 
 export class Gioco {
+	// dichiarazioni errori numeri giocatori
+
 	giocatori: Giocatore[];
 	tabellone: Casella[]; // le caselle saranno casuali
 	numeroGiocatori: number;
 
-	constructor(nomiGiocatori: string[], numeroCaselle: number) {
+	constructor(
+		nomiGiocatori: string[],
+		numeroCaselle: number = NUMERO_CASELLE_PREDEFINITO,
+	) {
 		// Inizializza l'array dei giocatori con i nomi forniti
+
 		this.giocatori = nomiGiocatori.map((nome) => new Giocatore(nome));
 		this.numeroGiocatori = this.giocatori.length;
+
+		if (this.numeroGiocatori > NUMERO_GIOCATORI_MASSIMO) {
+			throw Errori.erroreGiocatoriMassimo;
+		}
+		if (this.numeroGiocatori < NUMERO_GIOCATORI_MINIMO) {
+			throw Errori.erroreGiocatoriMinimo;
+		}
+
 		const temp: Casella[] = [];
 
 		// Creazione numero caselle da 1 fino al numero richiesto
@@ -39,14 +61,19 @@ export class Gioco {
 	printInformazioniGioco() {
 		console.log("--- INFORMAZIONI GIOCO ---");
 		console.log(`Numero giocatori: ${this.numeroGiocatori}`);
-		console.log("---------------------------------------");
+
+		console.log(NuovaLinea);
+		console.log(separatore);
 
 		this.giocatori.forEach((giocatore, index) => {
 			console.log(`Nome Giocatore ${index + 1}: ${giocatore.giocatore}`);
 		});
 
-		console.log("---------------------------------------");
+		console.log(separatore);
+		console.log(NuovaLinea);
+
 		console.log(`Numero caselle: ${this.tabellone.length}`);
+
 		console.log("--- INFORMAZIONI CASELLE ---");
 		for (const casella of this.tabellone) {
 			console.log(
