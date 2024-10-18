@@ -1,4 +1,5 @@
 import { Casella, CasellaSpeciale } from "./casella";
+import { Dado } from "./dado";
 import { Errori } from "./errori";
 import {
 	NUMERO_CASELLE_PREDEFINITO,
@@ -19,10 +20,10 @@ class Giocatore {
 
 export class Gioco {
 	// dichiarazioni errori numeri giocatori
-
 	giocatori: Giocatore[];
 	tabellone: Casella[]; // le caselle saranno casuali
 	numeroGiocatori: number;
+	dado: Dado = new Dado();
 
 	posizioneGiocatori: {
 		giocatore: Giocatore;
@@ -115,7 +116,7 @@ export class Gioco {
 
 	giocaUnTurno() {
 		for (let i = 0; i < this.numeroGiocatori; i++) {
-			const lancioDiDado = Math.floor(Math.random() * 6);
+			const lancioDiDado = this.dado.lancia();
 			this.muoviGiocatore(i, lancioDiDado);
 			console.log(`Il giocatore con id ${i} si muove di ${lancioDiDado}`);
 		}
