@@ -11,15 +11,14 @@ function main() {
 	// il numero di stringhe nell'array nomiGiocatori deve corrispondere alla variabile numeroGiocatori nella classe Gioco
 
 	// Avvio del gioco con le informazioni fornite
+
 	const gioco: Gioco = new Gioco(nomiGiocatori, caselle);
+	
+	gioco.IniziaGioco()
+	gioco.printInformazioniGioco()
 
 	console.log("!!! INIZIALIZZAZIONE");
-	gioco.printInformazioniGioco();
-
-	console.log("!!! TURNO 1");
-	// gioco.muoviGiocatore(0, 2)
-	gioco.giocaUnTurno();
-	gioco.printInformazioniGioco();
+	
 }
 
 main();

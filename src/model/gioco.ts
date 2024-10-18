@@ -1,3 +1,4 @@
+import { clear } from "console";
 import { Casella, CasellaSpeciale } from "./casella";
 import { Errori } from "./errori";
 import {
@@ -20,14 +21,15 @@ class Giocatore {
 export class Gioco {
 	// dichiarazioni errori numeri giocatori
 
-	giocatori: Giocatore[];
+	static giocatori: Giocatore[];
 	tabellone: Casella[]; // le caselle saranno casuali
 	numeroGiocatori: number;
 
-	posizioneGiocatori: {
+	static posizioneGiocatori: {
 		giocatore: Giocatore;
 		posizione: number;
 	}[];
+	static numeroGiocatori: number;
 
 	constructor(
 		nomiGiocatori: string[],
@@ -35,10 +37,10 @@ export class Gioco {
 	) {
 		// Inizializza l'array dei giocatori con i nomi forniti
 
-		this.giocatori = nomiGiocatori.map(
+		Gioco.giocatori = nomiGiocatori.map(
 			(nome, index) => new Giocatore(nome, index),
 		);
-		this.numeroGiocatori = this.giocatori.length;
+		this.numeroGiocatori = Gioco.giocatori.length;
 
 		if (this.numeroGiocatori > NUMERO_GIOCATORI_MASSIMO) {
 			throw Errori.erroreGiocatoriMassimo;
@@ -66,19 +68,45 @@ export class Gioco {
 
 		this.tabellone = temp;
 
-		this.posizioneGiocatori = this.giocatori.map((g) => {
+		Gioco.posizioneGiocatori = Gioco.giocatori.map((g) => {
 			return { giocatore: g, posizione: 1 };
 		});
 	}
 
+	IniziaGioco()
+	{
+		const prompt = require('prompt-sync')()
+		
+		console.log("Selezionare l'azione da eseguire: ")
+		console.log("Digitare il numero sulla tastiera per ogni opzione")
+		console.log("\r")
+	
+		console.log("---> Avanza di una casella un giocatore ( 1 )")
+	
+		var question1 = prompt("Digita un numero per proseguire: ")
+	
+		if (question1 === String(1))
+		{
+				var PromptIDGiocatore = prompt("Digita l'ID del giocatore da spostare: ")
+				var PromptCaselleAvanzamento = prompt("Inserisci il numero di caselle da avanzare: ")
+	
+				Gioco.muoviGiocatore(PromptIDGiocatore, PromptCaselleAvanzamento)
+				//this.giocaUnTurno();
+		}
+	
+	}
+
 	printInformazioniGioco() {
+
+		this.IniziaGioco()
+
 		console.log("--- INFORMAZIONI GIOCO ---");
 		console.log(`Numero giocatori: ${this.numeroGiocatori}`);
 
 		console.log(NuovaLinea);
 		console.log(separatore);
 
-		this.giocatori.forEach((giocatore, index) => {
+		Gioco.giocatori.forEach((giocatore, index) => {
 			console.log(`Nome Giocatore ${index + 1}: ${giocatore.nome}`);
 		});
 
@@ -92,7 +120,7 @@ export class Gioco {
 			console.log(
 				`Casella numero ${casella.numero} ha il testo "${casella.testo}"`,
 			);
-			const giocatoriSuCasella = this.posizioneGiocatori.filter(
+			const giocatoriSuCasella = Gioco.posizioneGiocatori.filter(
 				(elemento) => elemento.posizione === casella.numero,
 			);
 			if (giocatoriSuCasella.length !== 0) {
@@ -102,21 +130,23 @@ export class Gioco {
 			}
 		}
 
-		console.table(this.posizioneGiocatori);
+		console.table(Gioco.posizioneGiocatori);
+
 	}
 
-	muoviGiocatore(idGiocatore: number, caselleDiAvanzamento: number) {
-		this.posizioneGiocatori.find(
-			(elemento) => elemento.giocatore.id === idGiocatore,
-		).posizione += caselleDiAvanzamento;
-	}
+	static muoviGiocatore(idGiocatore: number, caselleDiAvanzamento: number) {
+		let giocatorePosizione = Gioco.posizioneGiocatori.find(
+		  (elemento) => elemento.giocatore.id === idGiocatore
+		);
+	  }
+	  
 
 	// TODO: da migliorare e rivedere
 
-	giocaUnTurno() {
-		for (let i = 0; i < this.numeroGiocatori; i++) {
+	static giocaUnTurno() {
+		for (let i = 0; i < Gioco.numeroGiocatori; i++) {
 			const lancioDiDado = Math.floor(Math.random() * 6);
-			this.muoviGiocatore(i, lancioDiDado);
+			Gioco.muoviGiocatore(i, lancioDiDado);
 			console.log(`Il giocatore con id ${i} si muove di ${lancioDiDado}`);
 		}
 	}
