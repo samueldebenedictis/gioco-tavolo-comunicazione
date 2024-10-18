@@ -137,9 +137,11 @@ export class Gioco {
 
 	giocaUnTurno() {
 		for (let i = 0; i < this.numeroGiocatori; i++) {
-			const lancioDiDado = this.dado.lancia();
-			this.muoviGiocatore(i, lancioDiDado);
-			console.log(`Il giocatore con id ${i} si muove di ${lancioDiDado}`);
+			if (!this.giocatoreHaVinto(i)) {
+				const lancioDiDado = this.dado.lancia();
+				this.muoviGiocatore(i, lancioDiDado);
+				console.log(`Il giocatore con id ${i} si muove di ${lancioDiDado}`);
+			}
 		}
 	}
 
