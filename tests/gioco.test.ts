@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import { Gioco } from "../src/model/gioco";
 import { Errori } from "../src/model/errori";
+import { Dado } from "../src/model/dado";
 
 describe("Gioco", () => {
   test("La creazione di un gioco avviene con 2 giocatori e 40 caselle", () => {
@@ -93,4 +94,20 @@ describe("Gioco", () => {
 
     expect(() => creaGioco()).not.toThrowError();
   });
+
+  test("Il dado con 6 facce deve restituire un numero tra 1 e 6", () => {
+    const dado = new Dado(6)
+    for(let i = 0; i<1000; i++) {
+      expect(dado.lancia()).toBeGreaterThan(0)
+      expect(dado.lancia()).toBeLessThan(7)
+    }
+  })
+
+  test("Il dado con 8 facce deve restituire un numero tra 1 e 8", () => {
+    const dado = new Dado(8)
+    for(let i = 0; i<1000; i++) {
+      expect(dado.lancia()).toBeGreaterThan(0)
+      expect(dado.lancia()).toBeLessThan(9)
+    }
+  })
 });
