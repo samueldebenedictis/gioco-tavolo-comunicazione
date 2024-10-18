@@ -1,5 +1,6 @@
 // inclusione dipendenze
 import { Gioco } from "./model/gioco";
+import { red } from "./utils/log";
 import { consoleInt } from "./utils/read";
 import { consoleString } from "./utils/read";
 
@@ -27,11 +28,18 @@ async function main() {
 
 	// // Avvio del gioco con le informazioni fornite
 
-	console.log("!!! INIZIALIZZAZIONE");
+	console.log(`${red("--- INIZIALIZZAZIONE")}`);
 	gioco.printInformazioniGioco();
-	console.log("!!! TURNO 1");
-	// // gioco.muoviGiocatore(0, 2)
-	gioco.giocaUnTurno();
+
+	let numeroTurno = 1;
+	while (!gioco.giocoFinito()) {
+		console.log(`${red(`--- TURNO ${numeroTurno}`)}`);
+		gioco.giocaUnTurno();
+		gioco.printInformazioniGioco();
+		numeroTurno++;
+	}
+
+	console.log(`${red("--- GIOCO FINITO")}`);
 	gioco.printInformazioniGioco();
 }
 

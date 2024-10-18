@@ -20,15 +20,38 @@ class Giocatore {
 
 export class Gioco {
 	// dichiarazioni errori numeri giocatori
+
 	giocatori: Giocatore[];
 	tabellone: Casella[]; // le caselle saranno casuali
 	numeroGiocatori: number;
 	dado: Dado = new Dado();
-
 	posizioneGiocatori: {
 		giocatore: Giocatore;
 		posizione: number;
 	}[];
+
+	giocatoreHaVinto(id: number): boolean {
+		// un giocatore ha vinto se arriva sulla casella finale o la supera
+		const posizione = this.posizioneGiocatori.find(
+			(p) => p.giocatore.id === id,
+		);
+		if (posizione.posizione >= this.tabellone.length) {
+			return true;
+		}
+
+		return false;
+	}
+
+	giocoFinito(): boolean {
+		const idGiocatori = this.giocatori.map((g) => g.id);
+		let risultato = true;
+		for (const idSingolo of idGiocatori) {
+			if (!this.giocatoreHaVinto(idSingolo)) {
+				risultato = false;
+			}
+		}
+		return risultato;
+	}
 
 	constructor(
 		nomiGiocatori: string[],
@@ -111,8 +134,6 @@ export class Gioco {
 			(elemento) => elemento.giocatore.id === idGiocatore,
 		).posizione += caselleDiAvanzamento;
 	}
-
-	// TODO: da migliorare e rivedere
 
 	giocaUnTurno() {
 		for (let i = 0; i < this.numeroGiocatori; i++) {
