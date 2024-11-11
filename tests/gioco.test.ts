@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
-import { Gioco } from "../src/model/gioco";
-import { Errori } from "../src/model/errori";
 import { Dado } from "../src/model/dado";
+import { Errori } from "../src/model/errori";
+import { Gioco } from "../src/model/gioco";
 
 describe("Gioco", () => {
   test("La creazione di un gioco avviene con 2 giocatori e 40 caselle", () => {
@@ -38,7 +38,7 @@ describe("Gioco", () => {
           "Prova9",
           "Prova10",
         ],
-        10
+        10,
       );
     }
 
@@ -61,7 +61,7 @@ describe("Gioco", () => {
           "Prova10",
           "Prova11",
         ],
-        10
+        10,
       );
     }
 
@@ -70,12 +70,7 @@ describe("Gioco", () => {
 
   test("La creazione con meno di 2 giocatori fallisce", () => {
     function creaGioco() {
-      return new Gioco(
-        [
-          "Prova1",
-        ],
-        10
-      );
+      return new Gioco(["Prova1"], 10);
     }
 
     expect(() => creaGioco()).toThrowError(Errori.erroreGiocatoriMinimo);
@@ -83,31 +78,25 @@ describe("Gioco", () => {
 
   test("La creazione con 2 giocatori va a buon fine", () => {
     function creaGioco() {
-      return new Gioco(
-        [
-          "Prova1",
-          "Prova2",
-        ],
-        10
-      );
+      return new Gioco(["Prova1", "Prova2"], 10);
     }
 
     expect(() => creaGioco()).not.toThrowError();
   });
 
   test("Il dado con 6 facce deve restituire un numero tra 1 e 6", () => {
-    const dado = new Dado(6)
-    for(let i = 0; i<1000; i++) {
-      expect(dado.lancia()).toBeGreaterThan(0)
-      expect(dado.lancia()).toBeLessThan(7)
+    const dado = new Dado(6);
+    for (let i = 0; i < 1000; i++) {
+      expect(dado.lancia()).toBeGreaterThan(0);
+      expect(dado.lancia()).toBeLessThan(7);
     }
-  })
+  });
 
   test("Il dado con 8 facce deve restituire un numero tra 1 e 8", () => {
-    const dado = new Dado(8)
-    for(let i = 0; i<1000; i++) {
-      expect(dado.lancia()).toBeGreaterThan(0)
-      expect(dado.lancia()).toBeLessThan(9)
+    const dado = new Dado(8);
+    for (let i = 0; i < 1000; i++) {
+      expect(dado.lancia()).toBeGreaterThan(0);
+      expect(dado.lancia()).toBeLessThan(9);
     }
-  })
+  });
 });
