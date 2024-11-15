@@ -1,6 +1,6 @@
-"use client"
-import { Casella as C, CasellaSpeciale } from "@/model/casella";
-import { Giocatore } from "@/model/gioco";
+"use client";
+import { type Casella as C, CasellaSpeciale } from "@/model/casella";
+import type { Giocatore } from "@/model/gioco";
 
 type TabelloneProps = {
   caselle: C[];
@@ -22,13 +22,11 @@ function Casella(props: CasellaProps) {
   const giocatoriSullaCasella = props.giocatoriSullaCasella;
 
   return (
-    
     <div className="md border h-32 w-32 rounded">
       <div className="p-2">
-  
-          <p>
-            Casella {props.numeroCasella} {props.isSpeciale ? "⭐" : ""}
-          </p>
+        <p>
+          Casella {props.numeroCasella} {props.isSpeciale ? "⭐" : ""}
+        </p>
 
         <div className="text-xs">{props.testoCasella}</div>
         {giocatoriPresenti ? (
@@ -42,7 +40,6 @@ function Casella(props: CasellaProps) {
         )}
       </div>
     </div>
-    
   );
 }
 
@@ -59,7 +56,7 @@ export default function Tabellone(props: TabelloneProps) {
           numeroCasella={`${casella.numero}`}
           isSpeciale={casella instanceof CasellaSpeciale}
           giocatoriSullaCasella={props.posizioneGiocatori
-            .filter((pos) => pos.posizione == casella.numero)
+            .filter((pos) => pos.posizione === casella.numero)
             .map((pos) => pos.giocatore.nome)}
         />
       ))}

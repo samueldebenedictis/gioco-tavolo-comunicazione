@@ -146,7 +146,7 @@ export class Gioco {
         console.log(`Il giocatore con id ${i} si muove di ${lancioDiDado}`);
       }
     }
-    return this
+    return this;
   }
 
   // da migliorare

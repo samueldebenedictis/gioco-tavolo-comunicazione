@@ -1,8 +1,8 @@
 "use client";
 
 import { Gioco } from "@/model/gioco";
-import Tabellone from "./tabellone";
 import { useState } from "react";
+import Tabellone from "./tabellone";
 
 const nomiGiocatori = ["Stefano 🔴", "Samuel 🔵"];
 const caselle: number = 42;
