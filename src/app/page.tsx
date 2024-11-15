@@ -1,4 +1,5 @@
 "use client";
+
 import { Gioco } from "@/model/gioco";
 import Tabellone from "./tabellone";
 import { useState } from "react";

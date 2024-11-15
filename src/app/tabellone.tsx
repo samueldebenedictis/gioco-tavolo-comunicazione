@@ -1,3 +1,4 @@
+"use client"
 import { Casella as C, CasellaSpeciale } from "@/model/casella";
 import { Giocatore } from "@/model/gioco";
 
@@ -16,59 +17,22 @@ type CasellaProps = {
   giocatoriSullaCasella: string[];
 };
 
-/*
-
-import React, { useEffect, useState } from "react";
-
 function Casella(props: CasellaProps) {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   const giocatoriPresenti = props.giocatoriSullaCasella.length;
   const giocatoriSullaCasella = props.giocatoriSullaCasella;
 
   return (
+    
     <div className="md border h-32 w-32 rounded">
       <div className="p-2">
-        <div>
-          Casella {props.numeroCasella} {props.isSpeciale ? "⭐" : ""}
-        </div>
-        <div className="text-xs">
-          {props.testoCasella}
-        </div>
-        {isClient && giocatoriPresenti ? (
-          giocatoriSullaCasella.map((el) => <div key={el}>{el}</div>)
-        ) : (
-          ""
-        )}
-      </div>
-    </div>
-  );
-}
   
-  export default Casella;
-  
-
-*/
-
-function Casella(props: CasellaProps) {
- 
-  const giocatoriPresenti = props.giocatoriSullaCasella.length;
-  const giocatoriSullaCasella = props.giocatoriSullaCasella;
-
-  return (
-    <div className="md border h-32 w-32 rounded">
-      <div className="p-2">
-        <div>
           <p>
             Casella {props.numeroCasella} {props.isSpeciale ? "⭐" : ""}
           </p>
-        </div>
+
         <div className="text-xs">{props.testoCasella}</div>
-        { giocatoriPresenti ? (
-          <div >
+        {giocatoriPresenti ? (
+          <div>
             {giocatoriSullaCasella.map((el) => (
               <div key={el}>{el}</div>
             ))}
@@ -78,6 +42,7 @@ function Casella(props: CasellaProps) {
         )}
       </div>
     </div>
+    
   );
 }
 
