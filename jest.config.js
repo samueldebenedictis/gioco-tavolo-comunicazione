@@ -3,6 +3,6 @@ module.exports = {
   testEnvironment: "node",
   testPathIgnorePatterns: ["dist"],
   transform: {
-    "^.+.tsx?$": ["ts-jest",{}],
+    "^.+.tsx?$": ["ts-jest", {}],
   },
 };
