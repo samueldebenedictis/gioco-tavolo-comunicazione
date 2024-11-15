@@ -3,7 +3,7 @@ import { NUMERO_FACCE_PREDEFINITO } from "./vars";
 export class Dado {
   private readonly facce: number;
 
-  private generaNumeroCasuale(min, max) {
+  private generaNumeroCasuale(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 

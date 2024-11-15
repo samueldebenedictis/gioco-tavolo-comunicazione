@@ -9,7 +9,7 @@ import {
   separatore,
 } from "./vars";
 
-class Giocatore {
+export class Giocatore {
   readonly nome: string;
   readonly id: number;
   constructor(nomeGiocatore: string, idGiocatore: number) {
@@ -85,6 +85,9 @@ export class Gioco {
       } else {
         casellaTemp = new Casella(index, `Questa è la casella numero ${index}`);
       }
+      // if (random) {
+      // creo casella quiz
+      // }
       temp.push(casellaTemp);
     }
 
@@ -143,6 +146,7 @@ export class Gioco {
         console.log(`Il giocatore con id ${i} si muove di ${lancioDiDado}`);
       }
     }
+    return this
   }
 
   // da migliorare
