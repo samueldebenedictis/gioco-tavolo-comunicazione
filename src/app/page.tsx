@@ -15,18 +15,26 @@ export default function Home() {
 
   // Eventi
   const [numeroGiocatoriSelezionato, setNumeroGiocatori] = useState(
-    option[0].value
+    option[0].value,
   );
 
   const [arrayNomi, setNomi] = useState<string[]>([]);
+  const [arrayIcone, setIcone] = useState<string[]>([]);
 
   function onSubmitButtonClick() {
     localStorage.setItem("numeroGiocatori", `${numeroGiocatoriSelezionato}`);
-    for (let i = 0; i < parseInt(numeroGiocatoriSelezionato); i++) {
+    for (let i = 0; i < Number.parseInt(numeroGiocatoriSelezionato); i++) {
       localStorage.setItem(`giocatore_${i}`, arrayNomi[i]);
     }
-    localStorage.setItem('nomiGiocatori', JSON.stringify(arrayNomi))
-    
+
+    for (let i = 0; i < Number.parseInt(numeroGiocatoriSelezionato); i++) {
+      if (!arrayIcone[i]) {
+        arrayIcone[i] = "🐶";
+      }
+    }
+
+    localStorage.setItem("nomiGiocatori", JSON.stringify(arrayNomi));
+    localStorage.setItem("iconeGiocatori", JSON.stringify(arrayIcone));
   }
 
   function onTextFieldInputChange(index: number, e: string) {
@@ -34,6 +42,13 @@ export default function Home() {
     const newArr = arrayNomi;
     newArr[index] = e;
     setNomi(newArr);
+  }
+
+  function onPlayerIconChange(index: number, e: string) {
+    console.log(index, "icon", e);
+    const newArr = arrayIcone;
+    newArr[index] = e;
+    setIcone(newArr);
   }
 
   return (
@@ -47,6 +62,7 @@ export default function Home() {
           <select
             value={numeroGiocatoriSelezionato}
             onChange={(e) => setNumeroGiocatori(e.target.value)}
+            name="numeroGiocatori"
           >
             {option.map((e) => (
               <option key={e.value} value={e.value}>
@@ -55,7 +71,7 @@ export default function Home() {
             ))}
           </select>
           <div> Hai selezionato {numeroGiocatoriSelezionato} giocatori</div>
-          {[...Array(parseInt(numeroGiocatoriSelezionato))]
+          {[...Array(Number.parseInt(numeroGiocatoriSelezionato))]
             .map((_, i) => i)
             .map((g) => (
               <>
@@ -65,6 +81,16 @@ export default function Home() {
                   name={`giocatore${g}`}
                   onChange={(e) => onTextFieldInputChange(g, e.target.value)}
                 />
+                <label htmlFor={`giocatoreIcon${g}`}>
+                  Icona giocatore {g + 1}
+                </label>
+                <select onChange={(e) => onPlayerIconChange(g, e.target.value)}>
+                  {["🧡", "👌", "🍉", "🎶"].map((e) => (
+                    <option value={e} key={e}>
+                      {e}
+                    </option>
+                  ))}
+                </select>
               </>
             ))}
           <Link

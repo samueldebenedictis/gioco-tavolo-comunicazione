@@ -1,17 +1,20 @@
 "use client";
 
 import { Gioco } from "@/model/gioco";
+import { NUMERO_CASELLE_PREDEFINITO } from "@/model/vars";
 import { useState } from "react";
 import Tabellone from "../tabellone";
-import { NUMERO_CASELLE_PREDEFINITO } from "@/model/vars";
 
-const caselle = NUMERO_CASELLE_PREDEFINITO
+const caselle = NUMERO_CASELLE_PREDEFINITO;
 // const gioco: Gioco = new Gioco(nomiGiocatori, caselle);
 // gioco.giocaUnTurno();
 
 export default function Home() {
-  const nomiGiocatoriString = localStorage.getItem('nomiGiocatori'); 
-  const nomiGiocatori = JSON.parse(nomiGiocatoriString as string)
+  const nomiGiocatoriString = localStorage.getItem("nomiGiocatori");
+  const nomiGiocatori = JSON.parse(nomiGiocatoriString as string);
+  const iconeGiocatori = JSON.parse(
+    localStorage.getItem("iconeGiocatori") as string,
+  );
 
   const [gioco, setGioco] = useState(new Gioco(nomiGiocatori, caselle));
   const [counter, setCount] = useState(0);
@@ -32,9 +35,9 @@ export default function Home() {
     <>
       <div className="border w-64">
         <div className="pl-4 pb-4 pt-8">In questa partita stanno giocando:</div>
-        {gioco.giocatori.map((n) => (
+        {gioco.giocatori.map((n, i) => (
           <div className="pl-4 text-xl" key={n.nome}>
-            {n.nome}
+            {n.nome} {iconeGiocatori[i]}
           </div>
         ))}
       </div>
