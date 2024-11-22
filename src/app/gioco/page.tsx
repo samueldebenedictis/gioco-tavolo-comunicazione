@@ -13,6 +13,8 @@ export default function Home() {
   const [gioco, setGioco] = useState(new Gioco(nomiGiocatori, caselle));
   const [counter, setCount] = useState(0);
 
+  // Eventi
+
   function onButtonGiocaTurnoClick() {
     //scrivere qui le operazioni da svolgere al click del bottone Gioca Turno
 
