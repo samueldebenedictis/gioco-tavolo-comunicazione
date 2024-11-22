@@ -3,13 +3,16 @@
 import { Gioco } from "@/model/gioco";
 import { useState } from "react";
 import Tabellone from "../tabellone";
+import { NUMERO_CASELLE_PREDEFINITO } from "@/model/vars";
 
-const nomiGiocatori = ["Stefano 🔴", "Samuel 🔵"];
-const caselle: number = 42;
+const caselle = NUMERO_CASELLE_PREDEFINITO
 // const gioco: Gioco = new Gioco(nomiGiocatori, caselle);
 // gioco.giocaUnTurno();
 
 export default function Home() {
+  const nomiGiocatoriString = localStorage.getItem('nomiGiocatori'); 
+  const nomiGiocatori = JSON.parse(nomiGiocatoriString as string)
+
   const [gioco, setGioco] = useState(new Gioco(nomiGiocatori, caselle));
   const [counter, setCount] = useState(0);
 
@@ -22,6 +25,7 @@ export default function Home() {
     setCount(counter + 1);
     setGioco(newGioco);
     console.log(newGioco);
+    localStorage.setItem("COUNTER", `${counter}`);
   }
 
   return (

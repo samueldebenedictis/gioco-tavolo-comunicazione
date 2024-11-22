@@ -14,7 +14,27 @@ export default function Home() {
     .map((i) => ({ value: `${i}`, label: i }));
 
   // Eventi
-  const [selected, setSelected] = useState(option[0].value);
+  const [numeroGiocatoriSelezionato, setNumeroGiocatori] = useState(
+    option[0].value
+  );
+
+  const [arrayNomi, setNomi] = useState<string[]>([]);
+
+  function onSubmitButtonClick() {
+    localStorage.setItem("numeroGiocatori", `${numeroGiocatoriSelezionato}`);
+    for (let i = 0; i < parseInt(numeroGiocatoriSelezionato); i++) {
+      localStorage.setItem(`giocatore_${i}`, arrayNomi[i]);
+    }
+    localStorage.setItem('nomiGiocatori', JSON.stringify(arrayNomi))
+    
+  }
+
+  function onTextFieldInputChange(index: number, e: string) {
+    console.log(index, e);
+    const newArr = arrayNomi;
+    newArr[index] = e;
+    setNomi(newArr);
+  }
 
   return (
     <>
@@ -25,8 +45,8 @@ export default function Home() {
             Inserisci il numero dei giocatori
           </label>
           <select
-            value={selected} // ...force the select's value to match the state variable...
-            onChange={(e) => setSelected(e.target.value)} // ... and update the state variable on any change!
+            value={numeroGiocatoriSelezionato}
+            onChange={(e) => setNumeroGiocatori(e.target.value)}
           >
             {option.map((e) => (
               <option key={e.value} value={e.value}>
@@ -34,10 +54,26 @@ export default function Home() {
               </option>
             ))}
           </select>
-          <div> Hai selezionato {selected} giocatori</div>
-          <button>
-            <Link href="/gioco"> premi qui per andare al gioco</Link>
-          </button>
+          <div> Hai selezionato {numeroGiocatoriSelezionato} giocatori</div>
+          {[...Array(parseInt(numeroGiocatoriSelezionato))]
+            .map((_, i) => i)
+            .map((g) => (
+              <>
+                <label htmlFor={`giocatore${g}`}>Nome giocatore {g + 1}</label>
+                <input
+                  id={`giocatore${g}`}
+                  name={`giocatore${g}`}
+                  onChange={(e) => onTextFieldInputChange(g, e.target.value)}
+                />
+              </>
+            ))}
+          <Link
+            className="h-12 w-full rounded-full bg-gray-800 text-white"
+            onClick={() => onSubmitButtonClick()}
+            href="/gioco"
+          >
+            Gioca
+          </Link>
         </main>
       </div>
     </>
