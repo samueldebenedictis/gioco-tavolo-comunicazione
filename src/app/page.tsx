@@ -1,57 +1,43 @@
 "use client";
 
-import { Gioco } from "@/model/gioco";
+import {
+  NUMERO_GIOCATORI_MASSIMO,
+  NUMERO_GIOCATORI_MINIMO,
+} from "@/model/vars";
+import Link from "next/link";
 import { useState } from "react";
-import Tabellone from "./tabellone";
-
-const nomiGiocatori = ["Stefano 🔴", "Samuel 🔵"];
-const caselle: number = 42;
-// const gioco: Gioco = new Gioco(nomiGiocatori, caselle);
-// gioco.giocaUnTurno();
 
 export default function Home() {
-  const [gioco, setGioco] = useState(new Gioco(nomiGiocatori, caselle));
-  const [counter, setCount] = useState(0);
+  const option = [...Array(NUMERO_GIOCATORI_MASSIMO + 1)]
+    .slice(NUMERO_GIOCATORI_MINIMO)
+    .map((_, i) => i + NUMERO_GIOCATORI_MINIMO)
+    .map((i) => ({ value: `${i}`, label: i }));
 
-  function onButtonGiocaTurnoClick() {
-    //scrivere qui le operazioni da svolgere al click del bottone Gioca Turno
-
-    const newGioco = gioco.giocaUnTurno();
-    setCount(counter + 1);
-    setGioco(newGioco);
-    console.log(newGioco);
-  }
+  // Eventi
+  const [selected, setSelected] = useState(option[0].value);
 
   return (
     <>
-      <div className="border w-64">
-        <div className="pl-4 pb-4 pt-8">In questa partita stanno giocando:</div>
-        {gioco.giocatori.map((n) => (
-          <div className="pl-4 text-xl" key={n.nome}>
-            {n.nome}
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={() => onButtonGiocaTurnoClick()}
-        className="border rounded-full p-4"
-      >
-        Gioca un turno
-      </button>
-      <p>
-        {gioco.posizioneGiocatori[0].giocatore.nome} è in posizione{" "}
-        {gioco.posizioneGiocatori[0].posizione}
-      </p>
-      <p>
-        {gioco.posizioneGiocatori[1].giocatore.nome} è in posizione{" "}
-        {gioco.posizioneGiocatori[1].posizione}
-      </p>
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-          <Tabellone
-            caselle={gioco.tabellone}
-            posizioneGiocatori={gioco.posizioneGiocatori}
-          />
+          Questo è l&apos;index
+          <label htmlFor="numeroGiocatori">
+            Inserisci il numero dei giocatori
+          </label>
+          <select
+            value={selected} // ...force the select's value to match the state variable...
+            onChange={(e) => setSelected(e.target.value)} // ... and update the state variable on any change!
+          >
+            {option.map((e) => (
+              <option key={e.value} value={e.value}>
+                {e.label}
+              </option>
+            ))}
+          </select>
+          <div> Hai selezionato {selected} giocatori</div>
+          <button>
+            <Link href="/gioco"> premi qui per andare al gioco</Link>
+          </button>
         </main>
       </div>
     </>
