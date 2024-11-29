@@ -1,5 +1,4 @@
 "use client";
-
 import {
   NUMERO_GIOCATORI_MASSIMO,
   NUMERO_GIOCATORI_MINIMO,

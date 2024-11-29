@@ -1,23 +1,30 @@
 "use client";
-
 import { Gioco } from "@/model/gioco";
 import { NUMERO_CASELLE_PREDEFINITO } from "@/model/vars";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Tabellone from "../tabellone";
 
 const caselle = NUMERO_CASELLE_PREDEFINITO;
-// const gioco: Gioco = new Gioco(nomiGiocatori, caselle);
-// gioco.giocaUnTurno();
 
 export default function Home() {
-  const nomiGiocatoriString = localStorage.getItem("nomiGiocatori");
-  const nomiGiocatori = JSON.parse(nomiGiocatoriString as string);
-  const iconeGiocatori = JSON.parse(
-    localStorage.getItem("iconeGiocatori") as string
-  );
-
+  const [nomiGiocatori, setNomiGiocatori] = useState(["", ""]);
+  const [iconeGiocatori, setIconeGiocatori] = useState(["", ""]);
   const [gioco, setGioco] = useState(new Gioco(nomiGiocatori, caselle));
   const [counter, setCount] = useState(0);
+
+  useEffect(() => {
+    setNomiGiocatori(
+      JSON.parse(localStorage.getItem("nomiGiocatori") as string)
+    );
+  }, []);
+  useEffect(() => {
+    setIconeGiocatori(
+      JSON.parse(localStorage.getItem("iconeGiocatori") as string)
+    );
+  }, []);
+  useEffect(() => {
+    setGioco(new Gioco(nomiGiocatori, caselle));
+  }, [nomiGiocatori]);
 
   // Eventi
 
