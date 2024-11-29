@@ -12,7 +12,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "format": "npx @biomejs/biome check --write ./src ./tests"
+    "format": "npx @biomejs/biome check --write ./src ./tests",
+    "playwright": "npx playwright test"
   },
   "dependencies": {
     "next": "14.2.14",
