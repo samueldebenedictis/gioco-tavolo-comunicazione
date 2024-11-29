@@ -13,7 +13,7 @@ export default function Home() {
   const nomiGiocatoriString = localStorage.getItem("nomiGiocatori");
   const nomiGiocatori = JSON.parse(nomiGiocatoriString as string);
   const iconeGiocatori = JSON.parse(
-    localStorage.getItem("iconeGiocatori") as string,
+    localStorage.getItem("iconeGiocatori") as string
   );
 
   const [gioco, setGioco] = useState(new Gioco(nomiGiocatori, caselle));
@@ -55,13 +55,11 @@ export default function Home() {
         {gioco.posizioneGiocatori[1].giocatore.nome} è in posizione{" "}
         {gioco.posizioneGiocatori[1].posizione}
       </p>
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-          <Tabellone
-            caselle={gioco.tabellone}
-            posizioneGiocatori={gioco.posizioneGiocatori}
-          />
-        </main>
+      <div className="items-center justify-items-center w-full">
+        <Tabellone
+          caselle={gioco.tabellone}
+          posizioneGiocatori={gioco.posizioneGiocatori}
+        />
       </div>
     </>
   );
