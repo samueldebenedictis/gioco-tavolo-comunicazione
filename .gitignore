@@ -37,3 +37,8 @@ next-env.d.ts
 
 gioco-tavolo-comunicazione-main.code-workspace
 dist
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
