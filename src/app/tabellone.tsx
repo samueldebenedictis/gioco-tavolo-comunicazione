@@ -52,7 +52,7 @@ export default function Tabellone(props: TabelloneProps) {
           key={casella.numero}
           testoCasella={casella.testo}
           numeroCasella={`${casella.numero}`}
-          isSpeciale={casella instanceof CasellaSpeciale}
+          isSpeciale={(casella as CasellaSpeciale).isSpeciale}
           giocatoriSullaCasella={props.posizioneGiocatori
             .filter((pos) => pos.posizione === casella.numero)
             .map((pos) => pos.giocatore.nome)}

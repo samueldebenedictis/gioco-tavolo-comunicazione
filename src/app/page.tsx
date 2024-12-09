@@ -1,11 +1,13 @@
 "use client";
 import {
+  NUMERO_CASELLE_PREDEFINITO,
   NUMERO_GIOCATORI_MASSIMO,
   NUMERO_GIOCATORI_MINIMO,
 } from "@/model/vars";
 import Link from "next/link";
 import { useState } from "react";
 import { emoji } from "./emoji";
+import { Gioco } from "@/model/gioco";
 
 export default function Home() {
   const option = [...Array(NUMERO_GIOCATORI_MASSIMO + 1)]
@@ -25,10 +27,6 @@ export default function Home() {
   const iconeDisponibili = emoji;
 
   function onSubmitButtonClick(e: MouseEvent) {
-    localStorage.setItem("numeroGiocatori", `${numeroGiocatoriSelezionato}`);
-    localStorage.setItem("nomiGiocatori", JSON.stringify(arrayNomi));
-    localStorage.setItem("iconeGiocatori", JSON.stringify(arrayIcone));
-
     console.log(arrayNomi);
     console.log(arrayIcone);
 
@@ -38,6 +36,19 @@ export default function Home() {
       }
     }
 
+    for (let i = 0; i < Number.parseInt(numeroGiocatoriSelezionato); i++) {
+      // .charAt(n: number) => lettera in posizione n di una stringa
+      // .toUpperCase() => ritorna la stringa tutta in maiuscolo
+      // .toLowerCase() => ritorna la stringa tutta in minuscolo
+      // .slice(n: number) => ritorna una parte della stringa a partire da n
+      // .replace() => sostituisce dei caratteri
+      // .replaceAll() => sostituisce dei caratteri
+
+      const nomeGiocatore = arrayNomi[i].toLowerCase().replace(/[^a-zàèìòù]+/g,"");;
+      const maiuscola = nomeGiocatore.charAt(0).toUpperCase();
+      arrayNomi[i] = maiuscola + nomeGiocatore.slice(1);
+    }
+
     if (
       arrayIcone.length != parseInt(numeroGiocatoriSelezionato) ||
       arrayNomi.length != parseInt(numeroGiocatoriSelezionato)
@@ -45,6 +56,14 @@ export default function Home() {
       setMessaggioErrore(true);
       e.preventDefault();
     }
+
+    localStorage.setItem("numeroGiocatori", `${numeroGiocatoriSelezionato}`);
+    localStorage.setItem("nomiGiocatori", JSON.stringify(arrayNomi));
+    localStorage.setItem("iconeGiocatori", JSON.stringify(arrayIcone));
+
+    const caselle = NUMERO_CASELLE_PREDEFINITO;
+    const gioco = new Gioco(arrayNomi, caselle);
+    localStorage.setItem("istanzaGioco", JSON.stringify(gioco));
   }
 
   function onTextFieldInputChange(index: number, e: string) {
@@ -66,7 +85,7 @@ export default function Home() {
       <main className="flex flex-col gap-2">
         <div>
           <h1 className="font-bold text-xl">Benvenuti!</h1>
-          <p className="text-sm">Per iniziare inserisci i dati!</p>
+          <p className="text-sm">Per iniziare inserite i vostri dati!</p>
         </div>
         <div className="flex flex-col">
           <label className="font-bold" htmlFor="numeroGiocatori">
