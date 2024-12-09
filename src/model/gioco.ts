@@ -33,7 +33,7 @@ export class Gioco {
   giocatoreHaVinto(id: number): boolean {
     // un giocatore ha vinto se arriva sulla casella finale o la supera
     const posizione = this.posizioneGiocatori.find(
-      (p) => p.giocatore.id === id,
+      (p) => p.giocatore.id === id
     );
     if (posizione!.posizione >= this.tabellone.length) {
       return true;
@@ -56,46 +56,79 @@ export class Gioco {
   constructor(
     nomiGiocatori: string[],
     numeroCaselle: number = NUMERO_CASELLE_PREDEFINITO,
+    giocoCompleto?: {
+      dado: {
+        facce: number;
+      };
+      giocatori: {
+        nome: string;
+        id: number;
+      }[];
+      numeroGiocatori: number;
+      tabellone: {
+        testo: string;
+        numero: number;
+        isSpeciale?: boolean;
+      }[];
+      posizioneGiocatori: {
+        giocatore: {
+          nome: string;
+          id: number;
+        };
+        posizione: number;
+      }[];
+    }
   ) {
-    // Inizializza l'array dei giocatori con i nomi forniti
+    if (giocoCompleto) {
+      this.giocatori = giocoCompleto.giocatori;
+      this.tabellone = giocoCompleto.tabellone;
+      this.numeroGiocatori = giocoCompleto.numeroGiocatori;
+      this.dado = new Dado(giocoCompleto.dado.facce);
+      this.posizioneGiocatori = giocoCompleto.posizioneGiocatori;
+    } else {
+      // Inizializza l'array dei giocatori con i nomi forniti
 
-    this.giocatori = nomiGiocatori.map(
-      (nome, index) => new Giocatore(nome, index),
-    );
-    this.numeroGiocatori = this.giocatori.length;
+      this.giocatori = nomiGiocatori.map(
+        (nome, index) => new Giocatore(nome, index)
+      );
+      this.numeroGiocatori = this.giocatori.length;
 
-    if (this.numeroGiocatori > NUMERO_GIOCATORI_MASSIMO) {
-      throw Errori.erroreGiocatoriMassimo;
-    }
-    if (this.numeroGiocatori < NUMERO_GIOCATORI_MINIMO) {
-      throw Errori.erroreGiocatoriMinimo;
-    }
-
-    const temp: Casella[] = [];
-
-    // Creazione numero caselle da 1 fino al numero richiesto
-    for (let index = 1; index <= numeroCaselle; index++) {
-      let casellaTemp: Casella;
-
-      if (Math.random() > 0.9) {
-        casellaTemp = new CasellaSpeciale(
-          index,
-          `Questa è la casella speciale numero ${index}`,
-        );
-      } else {
-        casellaTemp = new Casella(index, `Questa è la casella numero ${index}`);
+      if (this.numeroGiocatori > NUMERO_GIOCATORI_MASSIMO) {
+        throw Errori.erroreGiocatoriMassimo;
       }
-      // if (random) {
-      // creo casella quiz
-      // }
-      temp.push(casellaTemp);
+      if (this.numeroGiocatori < NUMERO_GIOCATORI_MINIMO) {
+        throw Errori.erroreGiocatoriMinimo;
+      }
+
+      const temp: Casella[] = [];
+
+      // Creazione numero caselle da 1 fino al numero richiesto
+      for (let index = 1; index <= numeroCaselle; index++) {
+        let casellaTemp: Casella;
+
+        if (Math.random() > 0.9) {
+          casellaTemp = new CasellaSpeciale(
+            index,
+            `Questa è la casella speciale numero ${index}`
+          );
+        } else {
+          casellaTemp = new Casella(
+            index,
+            `Questa è la casella numero ${index}`
+          );
+        }
+        // if (random) {
+        // creo casella quiz
+        // }
+        temp.push(casellaTemp);
+      }
+
+      this.tabellone = temp;
+
+      this.posizioneGiocatori = this.giocatori.map((g) => {
+        return { giocatore: g, posizione: 1 };
+      });
     }
-
-    this.tabellone = temp;
-
-    this.posizioneGiocatori = this.giocatori.map((g) => {
-      return { giocatore: g, posizione: 1 };
-    });
   }
 
   printInformazioniGioco() {
@@ -117,10 +150,10 @@ export class Gioco {
     console.log("--- INFORMAZIONI CASELLE ---");
     for (const casella of this.tabellone) {
       console.log(
-        `Casella numero ${casella.numero} ha il testo "${casella.testo}"`,
+        `Casella numero ${casella.numero} ha il testo "${casella.testo}"`
       );
       const giocatoriSuCasella = this.posizioneGiocatori.filter(
-        (elemento) => elemento.posizione === casella.numero,
+        (elemento) => elemento.posizione === casella.numero
       );
       if (giocatoriSuCasella.length !== 0) {
         for (const g of giocatoriSuCasella) {
@@ -134,7 +167,7 @@ export class Gioco {
 
   muoviGiocatore(idGiocatore: number, caselleDiAvanzamento: number) {
     this.posizioneGiocatori.find(
-      (elemento) => elemento.giocatore.id === idGiocatore,
+      (elemento) => elemento.giocatore.id === idGiocatore
     )!.posizione += caselleDiAvanzamento;
   }
 

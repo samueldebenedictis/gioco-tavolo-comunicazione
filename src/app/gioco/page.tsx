@@ -3,6 +3,7 @@ import { Gioco } from "@/model/gioco";
 import { NUMERO_CASELLE_PREDEFINITO } from "@/model/vars";
 import { useEffect, useState } from "react";
 import Tabellone from "../tabellone";
+import Link from "next/link";
 
 export default function Home() {
   const [nomiGiocatori, setNomiGiocatori] = useState(["", ""]);
@@ -12,7 +13,6 @@ export default function Home() {
   );
   const [counter, setCount] = useState(0);
   const [caricamentoEffettuato, setCaricamentoEffettuato] = useState(false);
-
 
   useEffect(() => {
     setNomiGiocatori(
@@ -25,8 +25,13 @@ export default function Home() {
     );
   }, []);
   useEffect(() => {
-    setGioco(JSON.parse(localStorage.getItem("istanzaGioco") as string) as Gioco);
-  }, []);
+    const istanzaGiocoObject = JSON.parse(
+      localStorage.getItem("istanzaGioco") as string
+    );
+    setGioco(
+      new Gioco(nomiGiocatori, NUMERO_CASELLE_PREDEFINITO, istanzaGiocoObject)
+    );
+  }, [nomiGiocatori]);
 
   useEffect(() => {
     setCaricamentoEffettuato(true);
@@ -34,14 +39,25 @@ export default function Home() {
 
   // Eventi
 
+  function onResetButtonClick() {
+    localStorage.clear();
+  }
+
   function onButtonGiocaTurnoClick() {
     //scrivere qui le operazioni da svolgere al click del bottone Gioca Turno
 
-    const newGioco = gioco.giocaUnTurno();
+    if (localStorage.getItem("istanzaGioco") == undefined) {
+      throw new Error(
+        "Impossibile giocare un turno poichè l'istanza corrente non esiste!"
+      );
+    }
+
+    const giocoAggiornato = gioco.giocaUnTurno();
     setCount(counter + 1);
-    setGioco(newGioco);
-    console.log(newGioco);
+    setGioco(giocoAggiornato);
+    console.log(giocoAggiornato);
     localStorage.setItem("COUNTER", `${counter}`);
+    localStorage.setItem("istanzaGioco", JSON.stringify(giocoAggiornato));
   }
 
   if (!caricamentoEffettuato) {
@@ -55,15 +71,26 @@ export default function Home() {
   return (
     <div className="grid items-center justify-items-center items-center p-8">
       <main className="flex flex-col gap-2">
-        <div className="">
-          <div className="pl-4 pb-4 pt-8">
-            In questa partita stanno giocando:
-          </div>
-          {nomiGiocatori.map((n, i) => (
-            <div className="pl-4 text-xl" key={n}>
-              Giocatore {i + 1}: {n} {iconeGiocatori[i]}
+        <div className="pl-4 pb-4 pt-8 grid grid-cols-2">
+          <div className="col-span-1">
+            <div className="pl-4 pb-4 pt-8">
+              In questa partita stanno giocando:
             </div>
-          ))}
+            {nomiGiocatori.map((n, i) => (
+              <div className="pl-4 text-xl" key={n}>
+                Giocatore {i + 1}: {n} {iconeGiocatori[i]}
+              </div>
+            ))}
+          </div>
+          <div className="col-span-1 self-end w-full">
+            <Link
+              onClick={() => onResetButtonClick()}
+              href="/"
+              className="flex h-12 w-full rounded-full bg-black justify-center items-center font-bold text-xl text-yellow-100"
+            >
+              Resetta partita
+            </Link>
+          </div>
         </div>
         <button
           onClick={() => onButtonGiocaTurnoClick()}
