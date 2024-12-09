@@ -1,6 +1,6 @@
 "use client";
 
-export function Dado(props: { n: number }) {
+function Dado(props: { n: number }) {
   if (props.n <= 0 || props.n > 6) {
     return <p>Dado non implementato</p>;
   }
