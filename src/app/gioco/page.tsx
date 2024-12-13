@@ -1,19 +1,14 @@
 "use client";
 import { Gioco } from "@/model/gioco";
 import { NUMERO_CASELLE_PREDEFINITO } from "@/model/vars";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Tabellone from "../tabellone";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Dado } from "../dado";
 
-type SearchParamProps = {
-  searchParams: Record<string, string> | null | undefined;
-};
-
-export default function Home({ searchParams }: SearchParamProps) {
+export default function Home() {
   const router = useRouter();
-  const show = searchParams?.show;
 
   // Variabili di gioco
   const [nomiGiocatori, setNomiGiocatori] = useState(["", ""]);
@@ -123,10 +118,18 @@ export default function Home({ searchParams }: SearchParamProps) {
     );
   }
 
+  function ModalSuspence() {
+    const params = useSearchParams();
+    const show = params.get("show");
+    return show && <Modal />;
+  }
+
   return (
     <div className="grid items-center justify-items-center items-center p-8">
       <main className="flex flex-col gap-2">
-        {show && <Modal />}
+        <Suspense>
+          <ModalSuspence />
+        </Suspense>
         <div className="pl-4 pb-4 pt-8 grid grid-cols-2">
           <div className="col-span-1">
             <div className="pl-4 pb-4 pt-8">
