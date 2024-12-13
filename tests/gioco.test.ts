@@ -38,7 +38,7 @@ describe("Gioco", () => {
           "Prova9",
           "Prova10",
         ],
-        10,
+        10
       );
     }
 
@@ -61,11 +61,22 @@ describe("Gioco", () => {
           "Prova10",
           "Prova11",
         ],
-        10,
+        10
       );
     }
 
     expect(() => creaGioco()).toThrowError(Errori.erroreGiocatoriMassimo);
+  });
+
+  test("Creo gioco e provo turno", () => {
+    const nomiGiocatori = ["Riccardo", "Elena"];
+    const gioco: Gioco = new Gioco(nomiGiocatori, 40);
+    gioco.giocaTurnoGiocatoreCorrente();
+    expect(gioco.posizioneGiocatori[0].posizione).not.toBe(1);
+    expect(gioco.posizioneGiocatori[1].posizione).toBe(1);
+    gioco.giocaTurnoGiocatoreCorrente();
+    expect(gioco.posizioneGiocatori[0].posizione).not.toBe(1);
+    expect(gioco.posizioneGiocatori[1].posizione).not.toBe(1);
   });
 
   test("La creazione con meno di 2 giocatori fallisce", () => {

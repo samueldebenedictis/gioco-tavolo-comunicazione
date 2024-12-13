@@ -4,16 +4,27 @@ import { NUMERO_CASELLE_PREDEFINITO } from "@/model/vars";
 import { useEffect, useState } from "react";
 import Tabellone from "../tabellone";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Dado } from "../dado";
 
-export default function Home() {
+type SearchParamProps = {
+  searchParams: Record<string, string> | null | undefined;
+};
+
+export default function Home({ searchParams }: SearchParamProps) {
+  const router = useRouter();
+  const show = searchParams?.show;
+
+  // Variabili di gioco
   const [nomiGiocatori, setNomiGiocatori] = useState(["", ""]);
   const [iconeGiocatori, setIconeGiocatori] = useState(["", ""]);
   const [gioco, setGioco] = useState(
     new Gioco(["", ""], NUMERO_CASELLE_PREDEFINITO)
   );
-  const [counter, setCount] = useState(0);
   const [caricamentoEffettuato, setCaricamentoEffettuato] = useState(false);
+  const [counter, setCount] = useState(0);
 
+  // Metodi refresh stato pagina
   useEffect(() => {
     setNomiGiocatori(
       JSON.parse(localStorage.getItem("nomiGiocatori") as string)
@@ -38,21 +49,19 @@ export default function Home() {
   }, []);
 
   // Eventi
-
   function onResetButtonClick() {
     localStorage.clear();
   }
 
   function onButtonGiocaTurnoClick() {
-    //scrivere qui le operazioni da svolgere al click del bottone Gioca Turno
-
     if (localStorage.getItem("istanzaGioco") == undefined) {
       throw new Error(
         "Impossibile giocare un turno poichè l'istanza corrente non esiste!"
       );
     }
-
-    const giocoAggiornato = gioco.giocaUnTurno();
+    const { gioco: giocoAggiornato, lancioDiDado } =
+      gioco.giocaTurnoGiocatoreCorrente();
+    setScore(lancioDiDado);
     setCount(counter + 1);
     setGioco(giocoAggiornato);
     console.log(giocoAggiornato);
@@ -60,6 +69,52 @@ export default function Home() {
     localStorage.setItem("istanzaGioco", JSON.stringify(giocoAggiornato));
   }
 
+  const [played, setPlayed] = useState(0);
+  const [score, setScore] = useState(0);
+  // Modale
+  function Modal() {
+    const indiceVecchioGiocatore =
+      gioco.giocatoreCorrente - 1 < 0
+        ? gioco.numeroGiocatori - 1
+        : gioco.giocatoreCorrente - 1;
+    const nome = !played
+      ? gioco.giocatori[gioco.giocatoreCorrente].nome
+      : gioco.giocatori[indiceVecchioGiocatore].nome;
+    return (
+      <div className="fixed inset-0 bg-gray-800 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+        <div className="p-8 border w-96 shadow-lg rounded-md bg-gray-200 justify-center flex flex-col gap-4 text-center">
+          <h3 className="text-xl">Turno di</h3>
+          <p className="text-xl font-bold">{nome}</p>
+          {played ? (
+            <div className="flex flex-col w-full  items-center justify-center gap-4">
+              <p>
+                {nome} ha fatto {score}
+              </p>
+              <Dado n={score} />
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                setPlayed(played + 1);
+                onButtonGiocaTurnoClick();
+              }}
+              className="flex h-12 w-full rounded-full bg-black justify-center items-center font-bold text-xl text-yellow-100"
+            >
+              Gioca un turno
+            </button>
+          )}
+          <button
+            onClick={() => router.back()}
+            className="flex h-12 w-full rounded-full bg-black justify-center items-center font-bold text-xl text-red-100"
+          >
+            Chiudi
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback durante il caricamenti delle variabili
   if (!caricamentoEffettuato) {
     return (
       <>
@@ -71,6 +126,7 @@ export default function Home() {
   return (
     <div className="grid items-center justify-items-center items-center p-8">
       <main className="flex flex-col gap-2">
+        {show && <Modal />}
         <div className="pl-4 pb-4 pt-8 grid grid-cols-2">
           <div className="col-span-1">
             <div className="pl-4 pb-4 pt-8">
@@ -78,7 +134,8 @@ export default function Home() {
             </div>
             {nomiGiocatori.map((n, i) => (
               <div className="pl-4 text-xl" key={n}>
-                Giocatore {i + 1}: {n} {iconeGiocatori[i]}
+                Giocatore {i + 1}: {iconeGiocatori[i]} <b>{n}</b> in posizione{" "}
+                <b>{gioco.posizioneGiocatori[i].posizione}</b>
               </div>
             ))}
           </div>
@@ -93,20 +150,15 @@ export default function Home() {
           </div>
         </div>
         <button
-          onClick={() => onButtonGiocaTurnoClick()}
+          onClick={() => {
+            setPlayed(0);
+            router.push("?show=true");
+          }}
           className="flex h-12 w-full rounded-full bg-black justify-center items-center font-bold text-xl text-yellow-100"
         >
           Gioca un turno
         </button>
-        <p>
-          {gioco.posizioneGiocatori[0].giocatore.nome} è in posizione{" "}
-          {gioco.posizioneGiocatori[0].posizione}
-        </p>
-        <p>
-          {gioco.posizioneGiocatori[1].giocatore.nome} è in posizione{" "}
-          {gioco.posizioneGiocatori[1].posizione}
-        </p>
-        <div className="items-center justify-items-center w-full">
+        <div className="items-center justify-items-center w-full pt-8">
           <Tabellone
             caselle={gioco.tabellone}
             posizioneGiocatori={gioco.posizioneGiocatori}

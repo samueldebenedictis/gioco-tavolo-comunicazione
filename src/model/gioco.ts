@@ -29,6 +29,7 @@ export class Gioco {
     giocatore: Giocatore;
     posizione: number;
   }[];
+  giocatoreCorrente: number;
 
   giocatoreHaVinto(id: number): boolean {
     // un giocatore ha vinto se arriva sulla casella finale o la supera
@@ -77,6 +78,7 @@ export class Gioco {
         };
         posizione: number;
       }[];
+      giocatoreCorrente: number;
     }
   ) {
     if (giocoCompleto) {
@@ -85,6 +87,7 @@ export class Gioco {
       this.numeroGiocatori = giocoCompleto.numeroGiocatori;
       this.dado = new Dado(giocoCompleto.dado.facce);
       this.posizioneGiocatori = giocoCompleto.posizioneGiocatori;
+      this.giocatoreCorrente = giocoCompleto.giocatoreCorrente;
     } else {
       // Inizializza l'array dei giocatori con i nomi forniti
 
@@ -128,6 +131,7 @@ export class Gioco {
       this.posizioneGiocatori = this.giocatori.map((g) => {
         return { giocatore: g, posizione: 1 };
       });
+      this.giocatoreCorrente = 0;
     }
   }
 
@@ -180,6 +184,20 @@ export class Gioco {
       }
     }
     return this;
+  }
+
+  giocaTurnoGiocatore(n: number) {
+    const lancioDiDado = this.dado.lancia();
+    this.muoviGiocatore(n, lancioDiDado);
+    console.log(`Il giocatore con id ${n} si muove di ${lancioDiDado}`);
+    return lancioDiDado;
+  }
+
+  giocaTurnoGiocatoreCorrente() {
+    const lancioDiDado = this.giocaTurnoGiocatore(this.giocatoreCorrente);
+    this.giocatoreCorrente =
+      (this.giocatoreCorrente + 1) % this.numeroGiocatori;
+    return { gioco: this, lancioDiDado };
   }
 
   // da migliorare
